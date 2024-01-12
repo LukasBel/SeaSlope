@@ -3,9 +3,11 @@ package main
 import (
 	"SeaSlope/slope"
 	"fmt"
+	"log"
 )
 
 func main() {
+	//Creating the app
 	/*
 		app := fiber.New()
 
@@ -21,6 +23,15 @@ func main() {
 
 	*/
 
-	fmt.Println(slope.ScrapeBlueMountain())
+	data, _ := slope.ScrapeBlueMountain()
+	fmt.Println(data)
+
+	weatherResp := &slope.WeatherData{}
+	err := slope.GetData(weatherResp)
+	if err != nil {
+		log.Fatal("Failed to get data")
+	}
+
+	fmt.Println(weatherResp.Data.Values.Temperature)
 
 }
