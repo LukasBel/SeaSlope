@@ -1,6 +1,7 @@
 package main
 
 import (
+	"SeaSlope/sea"
 	"SeaSlope/slope"
 	"fmt"
 	"log"
@@ -23,7 +24,10 @@ func main() {
 
 	*/
 
+	//Slope data
+
 	data, _ := slope.ScrapeBlueMountain()
+	fmt.Println("Slope Data:")
 	fmt.Println(data)
 
 	weatherResp := &slope.WeatherData{}
@@ -33,5 +37,8 @@ func main() {
 	}
 
 	fmt.Println(weatherResp.Data.Values.Temperature)
+
+	fmt.Println("\n\nSea Data:")
+	fmt.Println(sea.ScapeSurfData())
 
 }

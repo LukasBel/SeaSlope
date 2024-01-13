@@ -1,12 +1,14 @@
 package sea
 
 import (
+	"SeaSlope/handlers"
 	"fmt"
 	"github.com/gocolly/colly"
 	"sync"
+	"time"
 )
 
-func ScapeSurfLine() (Forecast, error) {
+func ScapeSurfData() (Forecast, error) {
 	URL := "https://surfcaptain.com/forecast/atlantic-city-new-jersey"
 
 	forecast := Forecast{}
@@ -30,12 +32,23 @@ func ScapeSurfLine() (Forecast, error) {
 		forecastList = append(forecastList, element.Text)
 	})
 
+	c.OnHTML(".current-data-info", func(element *colly.HTMLElement) {
+		forecastList = append(forecastList, element.Text)
+	})
+
 	err := c.Visit(URL)
 	if err != nil {
 		return forecast, err
 	}
 
+	forecastList = handlers.CleanText(forecastList)
+
+	forecast.Date = time.Now().Day()
 	forecast.Report = forecastList[0]
+	forecast.Weather = forecastList[1]
+	forecast.Tide = forecastList[2]
+	forecast.Buoy = forecastList[3]
+	forecast.WaterTemp = forecastList[4]
 
 	wg.Wait()
 

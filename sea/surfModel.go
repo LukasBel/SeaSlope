@@ -1,8 +1,10 @@
 package sea
 
 type Forecast struct {
-	Date   string `json:"date"`
-	Size   string `json:"size"`
-	Rating string `json:"rating"`
-	Report string `json:"report"`
+	Date      int    `json:"date"`
+	Weather   string `json:"weather"`
+	Tide      string `json:"tide"`
+	Buoy      string `json:"buoy"`
+	WaterTemp string `json:"waterTemp"`
+	Report    string `json:"report"`
 }
