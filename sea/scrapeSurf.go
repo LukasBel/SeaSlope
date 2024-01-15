@@ -41,7 +41,7 @@ func ScapeSurfData() (Forecast, error) {
 		return forecast, err
 	}
 
-	forecastList = handlers.CleanText(forecastList)
+	forecastList = handlers.CleanText(forecastList) //filters out white space from data
 
 	forecast.Date = time.Now().Day()
 	forecast.Report = forecastList[0]
