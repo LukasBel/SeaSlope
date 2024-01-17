@@ -1,14 +1,31 @@
 package main
 
 import (
+	"SeaSlope/models"
+	"SeaSlope/storage"
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 	"log"
 	"os"
 )
 
 type Repository struct {
-	DB gorm.DB
+	DB *gorm.DB
+}
+
+func (r *Repository) GetSeaData(c *fiber.Ctx) error {
+
+}
+
+func (r *Repository) GetSlopeData(c *fiber.Ctx) error {
+
+}
+
+func (r *Repository) SetupRoutes(app *fiber.App) {
+	api := app.Group("/SeaSlope")
+	api.Get("/Sea", r.GetSeaData)
+	api.Get("/Slope", r.GetSlopeData)
 }
 
 func main() {
@@ -42,14 +59,14 @@ func main() {
 	}
 
 	app := fiber.New()
-	r.SetUpRoutes(app)
+	r.SetupRoutes(app)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		c.SendString("Welcome to SeaSlopes")
 		return nil
 	})
 
-	err := app.Listen(":8080")
+	err = app.Listen(":8080")
 	if err != nil {
 		log.Fatal("Failed to listen on port 8080")
 	}
