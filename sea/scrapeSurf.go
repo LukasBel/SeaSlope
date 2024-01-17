@@ -2,16 +2,17 @@ package sea
 
 import (
 	"SeaSlope/handlers"
+	"SeaSlope/models"
 	"fmt"
 	"github.com/gocolly/colly"
 	"sync"
 	"time"
 )
 
-func ScapeSurfData() (Forecast, error) {
+func ScapeSurfData() (models.Forecast, error) {
 	URL := "https://surfcaptain.com/forecast/atlantic-city-new-jersey"
 
-	forecast := Forecast{}
+	forecast := models.Forecast{}
 	forecastList := []string{}
 	var wg sync.WaitGroup
 

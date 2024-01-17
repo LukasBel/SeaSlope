@@ -1,4 +1,4 @@
-package slope
+package models
 
 import "time"
 

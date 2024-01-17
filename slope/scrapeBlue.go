@@ -1,6 +1,7 @@
 package slope
 
 import (
+	"SeaSlope/models"
 	"fmt"
 	"github.com/gocolly/colly"
 	"sync"
@@ -8,10 +9,10 @@ import (
 
 //1-11-2024: Implemented a wait group to account for data collection due to the asynchronous nature of web scraping
 
-func ScrapeBlueMountain() (Conditions, error) {
+func ScrapeBlueMountain() (models.Conditions, error) {
 	URL := "https://www.skibluemt.com/condition-report/"
 
-	conditions := Conditions{}
+	conditions := models.Conditions{}
 	conditionList := []string{}
 	var wg sync.WaitGroup
 

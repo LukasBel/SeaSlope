@@ -1,4 +1,4 @@
-package sea
+package models
 
 type Forecast struct {
 	Date      int    `json:"date"`

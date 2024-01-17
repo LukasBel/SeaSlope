@@ -1,13 +1,14 @@
 package slope
 
 import (
+	"SeaSlope/models"
 	"encoding/json"
 	"io"
 	"log"
 	"net/http"
 )
 
-func GetData(weatherResp *WeatherData) error {
+func GetData(weatherResp *models.WeatherData) error {
 	url := "https://api.tomorrow.io/v4/weather/realtime?location=blue%20mountain%20resort&apikey=DcIy5mM8YHNwH94Ow4FsQTLZjKaoMcxo"
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("accept", "application/json")
