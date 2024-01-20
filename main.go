@@ -2,11 +2,15 @@ package main
 
 import (
 	"SeaSlope/models"
+	"SeaSlope/sea"
+	"SeaSlope/slope"
 	"SeaSlope/storage"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -15,12 +19,26 @@ type Repository struct {
 }
 
 func (r *Repository) GetSeaData(c *fiber.Ctx) error {
-
+	data, _ := sea.ScapeSurfData()
+	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": data})
+	return nil
 }
 
 func (r *Repository) GetSlopeData(c *fiber.Ctx) error {
+	data, _ := slope.ScrapeBlueMountain()
+	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": data})
 
+	weatherResp := &models.WeatherData{}
+	err := slope.GetData(weatherResp)
+	if err != nil {
+		log.Fatal("Failed to get data")
+	}
+
+	fmt.Println(weatherResp.Data.Values.Temperature)
+	return nil
 }
+
+//Get GeneralData func
 
 func (r *Repository) SetupRoutes(app *fiber.App) {
 	api := app.Group("/SeaSlope")
@@ -49,10 +67,10 @@ func main() {
 		log.Fatal("Failed to connect to database")
 	}
 
-	err = models.MigrateSpots(db)
-	if err != nil {
-		log.Fatal("Failed to migrate database")
-	}
+	//err = models.MigrateSpots(db)
+	//if err != nil {
+	//	log.Fatal("Failed to migrate database")
+	//}
 
 	r := Repository{
 		DB: db,
