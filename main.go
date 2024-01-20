@@ -19,11 +19,20 @@ type Repository struct {
 }
 
 func (r *Repository) GetSeaData(c *fiber.Ctx) error {
-	data, _ := sea.ScapeSurfData()
-	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": data})
+	seaDataChan := make(chan models.Forecast)
+
+	go func() {
+		data, _ := sea.ScapeSurfData()
+		seaDataChan <- data
+	}()
+
+	seaData := <-seaDataChan
+
+	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": seaData})
 	return nil
 }
 
+// This works but perhaps measure performance and refactor to use channel
 func (r *Repository) GetSlopeData(c *fiber.Ctx) error {
 	data, _ := slope.ScrapeBlueMountain()
 	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": data})
