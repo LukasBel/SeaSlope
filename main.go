@@ -5,7 +5,6 @@ import (
 	"SeaSlope/sea"
 	"SeaSlope/slope"
 	"SeaSlope/storage"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
@@ -22,28 +21,51 @@ func (r *Repository) GetSeaData(c *fiber.Ctx) error {
 	seaDataChan := make(chan models.Forecast)
 
 	go func() {
-		data, _ := sea.ScapeSurfData()
+		data, err := sea.ScapeSurfData()
+		if err != nil {
+			c.Status(http.StatusBadRequest).JSON(&fiber.Map{"message": "Failed To Fetch Sea Data"})
+			log.Fatal("Sea Data GoRoutine Failed")
+		}
 		seaDataChan <- data
 	}()
 
 	seaData := <-seaDataChan
-
 	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": seaData})
 	return nil
 }
 
-// This works but perhaps measure performance and refactor to use channel
 func (r *Repository) GetSlopeData(c *fiber.Ctx) error {
-	data, _ := slope.ScrapeBlueMountain()
-	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": data})
+	slopeDataChan := make(chan models.Conditions)
 
+	go func() {
+		data, err := slope.ScrapeBlueMountain()
+		if err != nil {
+			c.Status(http.StatusBadRequest).JSON(&fiber.Map{"message": "Failed To Fetch Slope Data"})
+			log.Fatal("Slope Data GoRoutine Failed")
+		}
+		slopeDataChan <- data
+	}()
+
+	slopeData := <-slopeDataChan
+	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Slope Data Fetched Successfully", "data": slopeData})
+	return nil
+}
+
+func (r *Repository) GetSlopeWeather(c *fiber.Ctx) error {
 	weatherResp := &models.WeatherData{}
-	err := slope.GetData(weatherResp)
-	if err != nil {
-		log.Fatal("Failed to get data")
-	}
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
 
-	fmt.Println(weatherResp.Data.Values.Temperature)
+		err := slope.GetData(weatherResp)
+		if err != nil {
+			c.Status(http.StatusBadRequest).JSON(&fiber.Map{"message": "Failed To Fetch Slope Weather"})
+			log.Fatal("Failed to get data")
+		}
+	}()
+
+	<-done
+	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Slope Weather Fetched Successfully", "data": &weatherResp})
 	return nil
 }
 
@@ -53,6 +75,7 @@ func (r *Repository) SetupRoutes(app *fiber.App) {
 	api := app.Group("/SeaSlope")
 	api.Get("/Sea", r.GetSeaData)
 	api.Get("/Slope", r.GetSlopeData)
+	api.Get("/Slope/Weather", r.GetSlopeWeather)
 }
 
 func main() {
@@ -97,24 +120,5 @@ func main() {
 	if err != nil {
 		log.Fatal("Failed to listen on port 8080")
 	}
-
-	//Slope data
-
-	//data, _ := slope.ScrapeBlueMountain()
-	//fmt.Println("Slope Data:")
-	//fmt.Println(data)
-	//
-	//weatherResp := &slope.WeatherData{}
-	//err := slope.GetData(weatherResp)
-	//if err != nil {
-	//	log.Fatal("Failed to get data")
-	//}
-	//
-	//fmt.Println(weatherResp.Data.Values.Temperature)
-	//
-	////Sea Data
-	//
-	//fmt.Println("\n\nSea Data:")
-	//fmt.Println(sea.ScapeSurfData())
 
 }

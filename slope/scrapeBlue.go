@@ -47,5 +47,5 @@ func ScrapeBlueMountain() (models.Conditions, error) {
 
 	wg.Wait()
 
-	return conditions, err
+	return conditions, nil
 }
