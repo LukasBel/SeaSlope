@@ -69,6 +69,11 @@ func (r *Repository) GetSlopeWeather(c *fiber.Ctx) error {
 	return nil
 }
 
+func (r *Repository) SaveData(c *fiber.Ctx) error {
+
+	return nil
+}
+
 //Get GeneralData func
 
 func (r *Repository) SetupRoutes(app *fiber.App) {
@@ -76,6 +81,8 @@ func (r *Repository) SetupRoutes(app *fiber.App) {
 	api.Get("/Sea", r.GetSeaData)
 	api.Get("/Slope", r.GetSlopeData)
 	api.Get("/Slope/Weather", r.GetSlopeWeather)
+	api.Post("/Save", r.SaveData)
+
 }
 
 func main() {
@@ -113,7 +120,8 @@ func main() {
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		c.SendString("Welcome to SeaSlopes")
-		return nil
+		//Trying something new
+		return c.SendStatus(200) //Everything's ok
 	})
 
 	err = app.Listen(":8080")
