@@ -6,6 +6,7 @@ import (
 	"SeaSlope/slope"
 	"SeaSlope/storage"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 	"log"
@@ -69,10 +70,16 @@ func (r *Repository) GetSlopeWeather(c *fiber.Ctx) error {
 	return nil
 }
 
-func (r *Repository) SaveData(c *fiber.Ctx) error {
-
-	return nil
-}
+//func (r *Repository) SaveSeaData(c *fiber.Ctx) error {
+//	err := r.DB.Create(&models.Forecast{})
+//	if err != nil {
+//		c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{"message": "Failed To Save Data"})
+//		log.Fatal("Failed to get data")
+//	}
+//
+//	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Saved Successfully"})
+//	return nil
+//}
 
 //Get GeneralData func
 
@@ -81,7 +88,6 @@ func (r *Repository) SetupRoutes(app *fiber.App) {
 	api.Get("/Sea", r.GetSeaData)
 	api.Get("/Slope", r.GetSlopeData)
 	api.Get("/Slope/Weather", r.GetSlopeWeather)
-	api.Post("/Save", r.SaveData)
 
 }
 
@@ -118,10 +124,16 @@ func main() {
 	app := fiber.New()
 	r.SetupRoutes(app)
 
+	app.Use(cors.New())
+
+	//app.Get("/", func(c *fiber.Ctx) error {
+	//	c.SendString("Welcome to SeaSlopes")
+	//	//Trying something new
+	//	return c.SendStatus(200) //Everything's ok
+	//})
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		c.SendString("Welcome to SeaSlopes")
-		//Trying something new
-		return c.SendStatus(200) //Everything's ok
+		return c.SendFile("first-vue-project/dist/index.html")
 	})
 
 	err = app.Listen(":8080")

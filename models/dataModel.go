@@ -1,8 +1,6 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type SeaSlopeData struct {
 	ID          uint8       `gorm:"primaryKey" json:"id"`
