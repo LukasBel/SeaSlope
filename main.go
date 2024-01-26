@@ -32,7 +32,8 @@ func (r *Repository) GetSeaData(c *fiber.Ctx) error {
 
 	seaData := <-seaDataChan
 	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": seaData})
-	return nil
+	//return nil
+	return c.JSON(seaData)
 }
 
 func (r *Repository) GetSlopeData(c *fiber.Ctx) error {
@@ -135,6 +136,8 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendFile("first-vue-project/dist/index.html")
 	})
+
+	app.Get("/api/data", r.GetSeaData)
 
 	err = app.Listen(":8080")
 	if err != nil {
