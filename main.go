@@ -133,10 +133,6 @@ func main() {
 	//	return c.SendStatus(200) //Everything's ok
 	//})
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendFile("first-vue-project/dist/index.html")
-	})
-
 	app.Get("/api/data", r.GetSeaData)
 
 	err = app.Listen(":8080")
