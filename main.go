@@ -32,8 +32,7 @@ func (r *Repository) GetSeaData(c *fiber.Ctx) error {
 
 	seaData := <-seaDataChan
 	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": seaData})
-	//return nil
-	//return c.JSON(seaData)
+
 	return c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Sea Data Fetched Successfully", "data": seaData})
 }
 
@@ -50,8 +49,7 @@ func (r *Repository) GetSlopeData(c *fiber.Ctx) error {
 	}()
 
 	slopeData := <-slopeDataChan
-	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Slope Data Fetched Successfully", "data": slopeData})
-	return nil
+	return c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Slope Data Fetched Successfully", "data": slopeData})
 }
 
 func (r *Repository) GetSlopeWeather(c *fiber.Ctx) error {
@@ -68,8 +66,7 @@ func (r *Repository) GetSlopeWeather(c *fiber.Ctx) error {
 	}()
 
 	<-done
-	c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Slope Weather Fetched Successfully", "data": &weatherResp})
-	return nil
+	return c.Status(http.StatusOK).JSON(&fiber.Map{"message": "Slope Weather Fetched Successfully", "data": &weatherResp})
 }
 
 //func (r *Repository) SaveSeaData(c *fiber.Ctx) error {
@@ -133,7 +130,7 @@ func main() {
 	//	return c.SendStatus(200) //Everything's ok
 	//})
 
-	app.Get("/api/message", r.GetSeaData)
+	app.Get("/api/data", r.GetSeaData)
 
 	//app.Get("/api/message", func(c *fiber.Ctx) error {
 	//	message := "Hello from Golang Backend!"
