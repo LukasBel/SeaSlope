@@ -124,18 +124,7 @@ func main() {
 
 	app.Use(cors.New())
 
-	//app.Get("/", func(c *fiber.Ctx) error {
-	//	c.SendString("Welcome to SeaSlopes")
-	//	//Trying something new
-	//	return c.SendStatus(200) //Everything's ok
-	//})
-
-	app.Get("/api/data", r.GetSeaData)
-
-	//app.Get("/api/message", func(c *fiber.Ctx) error {
-	//	message := "Hello from Golang Backend!"
-	//	return c.JSON(fiber.Map{"message": message})
-	//})
+	//app.Get("/SeaSlope/data", r.GetSeaData)
 
 	err = app.Listen(":8080")
 	if err != nil {
